@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.dao.IOnlineTestDao">
+	<!-- 获取试卷中的所有题目id -->
+	<select id="selectExaminationPaper" resultType="com.cloud.model.ExaminationPaper">
+		select
+		*
+		from examinationPaper
+		where questionsId = #{questionsId,jdbcType=INTEGER}
+	</select>
+	<!-- 获取试卷完整的题目详情 -->
+	<select id="findQuestions" resultType="QuestionBank">
+		SELECT *
+		FROM questionBank
+		<if test="list !=null and list.size > 0"></if>
+		where pdId in
+		<foreach collection="list" item="pdId" separator="," open="("
+			close=")">
+			#{pdId}
+		</foreach>
+	</select>
+	<!-- 获取系统题库的题目详情 -->
+	<select id="selectSystemExaminationPaper" resultType="com.cloud.model.QuestionBank">
+		SELECT *
+		FROM questionBank
+		where testType = #{testType,jdbcType=VARCHAR}
+	</select>
+		
+		<insert id="insertAnswerResult" >
+					insert into userEvenLog (eventId,  activityId,  userId,  answerResults,  startTime,
+			 endTime,  rightTimes,  errorTimes,  accuracy,  eduEvaluate
+					) 
+						values(
+							 #{eventId,jdbcType=VARCHAR},
+							 #{activityId,jdbcType=INTEGER},
+							 #{userId,jdbcType=INTEGER},
+							 #{answerResults,jdbcType=VARCHAR},
+							 #{startTime},
+							 #{endTime},
+							 #{rightTimes,jdbcType=INTEGER},
+							 #{errorTimes,jdbcType=INTEGER},
+							 #{accuracy,jdbcType=VARCHAR},
+							 #{eduEvaluate,jdbcType=VARCHAR}
+							 )
+	  </insert>
+
+
+	<!-- 更新题目正确率  -->
+	<update id="updateRightAnswer">
+	update questionBank set rightTimes = rightTimes+1 ,accuracy = concat( truncate( rightTimes/( rightTimes+errorTimes)*100 ,2), '%')
+	<if test="list !=null and list.size > 0"></if>
+		where pdId in
+		<foreach collection="list" item="pdId" separator="," open="("
+			close=")">
+			#{pdId}
+		</foreach>
+	</update>
+	
+	
+	
+	
+	<!-- 更新题目错误率  -->
+	<update id="updateErrorAnswer">
+	update questionBank set errorTimes = errorTimes+1 ,
+	accuracy = concat( truncate( rightTimes/( rightTimes+errorTimes)*100 ,2), '%')
+	<if test="list !=null and list.size > 0"></if>
+		where pdId in
+		<foreach collection="list" item="pdId" separator="," open="("
+			close=")">
+			#{pdId}
+		</foreach>
+	</update>
+	
+
+	<update id="updateUserEvaluate">
+		update userEvenLog set eduEvaluate =  #{eduEvaluate,jdbcType=VARCHAR} 
+		where activityId = #{activityId,jdbcType=INTEGER} and userId = #{userId,jdbcType=INTEGER}
+	</update>
+
+</mapper>

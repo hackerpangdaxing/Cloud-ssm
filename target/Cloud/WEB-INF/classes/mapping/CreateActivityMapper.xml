@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.dao.IClassActivityDao">
+	<sql id="Base_Column_List">
+		activityId,teacherId,questionsId,testType,unit,section,signIn,chatRoom,onlineTest,eduEvaluate,startTime,endTime,address
+	</sql>
+	 <!-- 创建教学活动 -->
+	<insert id="insertClassActivity" parameterType="com.cloud.dao.IClassActivityDao">
+		insert into
+		createClassActivity(activityId,teacherId,questionsId,testType,unit,section,signIn,
+		chatRoom,onlineTest,eduEvaluate,startTime,endTime,address)
+		values
+		(#{activityId,jdbcType=INTEGER},
+		#{teacherId,jdbcType=INTEGER},
+		#{questionsId,jdbcType=INTEGER},
+		#{testType,jdbcType=VARCHAR},
+		#{unit,jdbcType=INTEGER},
+		#{section,jdbcType=INTEGER},
+		 #{signIn,jdbcType=VARCHAR},
+		#{chatRoom,jdbcType=VARCHAR},
+		#{onlineTest,jdbcType=VARCHAR},
+		#{eduEvaluate,jdbcType=VARCHAR},
+		#{startTime,jdbcType=DATE},
+		#{endTime,jdbcType=DATE},
+		#{address,jdbcType=VARCHAR} )
+
+	</insert>
+	
+	<select id="selectQuestionOneId"  resultType="java.lang.Integer">
+		select questionId1 from examinationPaper where questionsId = #{questionsId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询教学活动是否存在 -->
+	<select id="selectClassActivity" resultType="String">
+		select activityId from createClassActivity where
+		activityId=#{xxx,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询首页面信息 -->
+	<select id="selectClassList" resultType="com.cloud.model.CourseIntroduction">
+		select * from courseIntroduction
+	</select>
+	<!-- 查询首页面用户答题信息 -->
+	<select id="selectUserEvenLog" resultType="com.cloud.model.UserEvenLog" >
+		SELECT ROUND(AVG(errorTimes)) AS errorTimes,ROUND(AVG(rightTimes))  AS rightTimes,
+		concat( truncate( ROUND(AVG(rightTimes))/(ROUND(AVG(rightTimes))+ROUND(AVG(errorTimes)))*100 ,2), '%') AS accuracy
+		FROM userEvenLog WHERE userId =#{xxx,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询某一次教学活动的教学评价信息 -->
+	<select id="getEduEvaluate" resultType="com.cloud.model.UserEvenLog">
+		select eduEvaluate from userEvenLog where activityId = #{xxx,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取教师创建的所有活动 -->
+	<select id="getClassActivity" resultType="com.cloud.model.CreateClassActivity">
+		select activityId, teacherId,testType,questionsId , startTime from createClassActivity where teacherId =  #{xxx,jdbcType=INTEGER}  order by startTime
+	</select>
+	
+
+
+
+
+
+</mapper>

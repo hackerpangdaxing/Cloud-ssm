@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.dao.InsertQuestionDao">
+	<insert id="insertQuestion">
+		insert into questionBank
+		(pdId,answerType,testType,questionTitle,A,B,C,D,E,F,G,answer,analysis,teacherId)
+		values
+		<foreach collection="list" item="myList" separator=",">
+			(
+			#{myList.pdId,jdbcType=INTEGER},
+			#{myList.answerType,jdbcType=INTEGER},
+			#{myList.testType,jdbcType=VARCHAR},
+			#{myList.questionTitle,jdbcType=VARCHAR},
+			#{myList.A,jdbcType=VARCHAR},
+			#{myList.B,jdbcType=VARCHAR},
+			#{myList.C,jdbcType=VARCHAR},
+			#{myList.D,jdbcType=VARCHAR},
+			#{myList.E,jdbcType=VARCHAR},
+			#{myList.F,jdbcType=VARCHAR},
+			#{myList.G,jdbcType=VARCHAR},
+			#{myList.answer,jdbcType=VARCHAR},
+			#{myList.analysis,jdbcType=VARCHAR},
+			#{myList.teacherId,jdbcType=INTEGER}
+			)
+		</foreach>
+		<selectKey resultType="int" order="AFTER">
+			select @@identity
+		</selectKey>
+	</insert>
+
+	<select id="findNumber" resultType="int">
+		select count(*) from questionBank where teacherId=#{teacherId}
+	</select>
+
+
+	<select id="findQuestion" resultType="com.cloud.model.QuestionBank">
+		select questionTitle,accuracy from questionBank where teacherId=#{teacherId}
+	</select>
+	<insert id="creatExam" useGeneratedKeys="true" keyProperty="">
+		insert into
+		examinationPaper
+				(questionId1,teacherId,questionId2,questionId3,questionId4,questionId5,
+				questionId6,questionId7,questionId8,questionId9,questionId10,questionId11,
+				questionId12,questionId13,questionId14,questionId15,questionId16,questionId17,
+				questionId18,questionId19,questionId20,questionId21,questionId22,questionId23,
+				questionId24,questionId25,questionId26,questionId27,questionId28,questionId29,
+				questionId30,registTime)
+			values(
+				#{questionId1,jdbcType=INTEGER},#{teacherId,jdbcType=INTEGER},#{questionId2,jdbcType=INTEGER},
+				#{questionId3,jdbcType=INTEGER},#{questionId4,jdbcType=INTEGER},
+				#{questionId5,jdbcType=INTEGER},#{questionId6,jdbcType=INTEGER},
+				#{questionId7,jdbcType=INTEGER},#{questionId8,jdbcType=INTEGER},
+				#{questionId9,jdbcType=INTEGER},#{questionId10,jdbcType=INTEGER},
+				#{questionId11,jdbcType=INTEGER},#{questionId12,jdbcType=INTEGER},
+				#{questionId13,jdbcType=INTEGER},#{questionId14,jdbcType=INTEGER},
+				#{questionId15,jdbcType=INTEGER},#{questionId16,jdbcType=INTEGER},
+				#{questionId17,jdbcType=INTEGER},#{questionId18,jdbcType=INTEGER},
+				#{questionId19,jdbcType=INTEGER},#{questionId20,jdbcType=INTEGER},
+				#{questionId21,jdbcType=INTEGER},#{questionId22,jdbcType=INTEGER},
+				#{questionId23,jdbcType=INTEGER},#{questionId24,jdbcType=INTEGER},
+				#{questionId25,jdbcType=INTEGER},#{questionId26,jdbcType=INTEGER},
+				#{questionId27,jdbcType=INTEGER},#{questionId28,jdbcType=INTEGER},
+				#{questionId29,jdbcType=INTEGER},#{questionId30,jdbcType=INTEGER},#{registTime}
+			)
+			<selectKey resultType="int" order="AFTER" keyProperty="questionsId">
+			select @@identity
+		</selectKey>
+	</insert>
+	
+	<select id="findAllActivity" resultType="CreateClassActivity">
+		select activityId,startTime  from createClassActivity where teacherId=#{teacherId}
+	</select>
+	
+	<select id="findAllExam" resultType="ExaminationPaper">
+		select questionsId,registTime,questionId1 from examinationPaper where teacherId=#{teacherId} order by registTime
+	</select>
+</mapper>

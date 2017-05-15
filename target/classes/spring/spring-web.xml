@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context 
+         http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/websocket
+		http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+		
+	<!-- 配置SpringMVC -->
+	<!-- 1.开启SpringMVC注解模式 -->
+	<!-- 简化配置： 
+		(1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter 
+		(2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持 
+	-->
+	<context:annotation-config /> 
+	<!-- <mvc:annotation-driven /> -->
+	<mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean
+                class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <!-- 处理responseBody 里面日期类型 -->
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                            </bean>
+                        </property>
+                        <!-- 时区指定 -->
+                        <property name="timeZone" value="GMT+8" />
+                        <!-- 为null字段时不显示 -->
+                        <property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+	
+	
+	
+	 <mvc:resources location="/resources/" mapping="/resources/**"/>
+	<!-- 用于连接websocket通信 -->
+	<bean id="websocket" class="com.cloud.service.websocket.WebSocketHander"></bean>
+		<websocket:handlers  allowed-origins="*">
+		<websocket:mapping path="/hello.do" handler="websocket" />
+		<websocket:handshake-interceptors>
+				<bean class="com.cloud.service.websocket.MyHandshakeInterceptor" />
+			</websocket:handshake-interceptors>
+	</websocket:handlers>
+	
+	<!-- 2.静态资源默认servlet配置
+		(1)加入对静态资源的处理：js,gif,png
+		(2)允许使用"/"做整体映射
+	 -->
+	  <!-- 配置ViewResolver 。可用多个ViewResolver 。使用order属性排序。   InternalResourceViewResolver 放在最后-->
+    <!-- <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    <property name="order" value="1"></property>
+        <property name="mediaTypes">
+            <map>
+                告诉视图解析器，返回的类型为json格式
+                <entry key="json" value="application/json" />
+                <entry key="xml" value="application/xml" />
+                <entry key="htm" value="text/htm" />
+            </map>
+        </property>
+        <property name="defaultViews">
+            <list>
+                ModelAndView里的数据变成JSON
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+            </list>
+        </property>
+        <property name="ignoreAcceptHeader" value="true"></property>
+    </bean> -->
+    
+   <!-- 3.定义跳转的文件的前后缀 ，视图模式配置-->  
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->  
+        <property name="prefix" value="/WEB-INF/jsp/" />  
+        <property name="suffix" value=".jsp" />  
+        <property name="order" value="1" />
+    </bean>  
+	
+	 
+	 <!-- 4.扫描web相关的bean -->
+	 <context:component-scan base-package="com.cloud" />
+	 
+	 <!-- 配置文件上传 -->
+	<bean id="multipartResolver"
+		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		
+		<property name="defaultEncoding" value="utf-8"></property>	  
+		<property name="maxUploadSize" value="10485760"></property>
+	</bean>
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error"></property>
+		<property name="exceptionAttribute" value="ex"></property>
+	</bean>
+</beans>

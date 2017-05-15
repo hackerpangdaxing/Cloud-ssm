@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.dao.ICheckUserDao">
+	<select id="findUserName" resultType="String">
+		select name from viewUser
+		where name=#{0}
+	</select>
+	<select id="findTeacher" resultType="TeacherUser">
+		select * from teacherUser where name=#{0} and password=#{1}
+	</select>
+	<select id="findStudent" resultType="StudentUser">
+		select * from studentUser where name=#{0} and password=#{1}
+	</select>
+	<select id="findType" resultType="String">
+		select type from viewUser where name=#{name}
+	</select>
+	<insert id="Register" >
+		insert into 
+			<choose>	
+				<when test="type == 'teacher'">
+					teacherUser
+				</when>
+				<when test="type == 'student'">
+					studentUser
+				</when>
+			</choose>
+		(name,password,type,mail,registerTime,token,status)
+		values(#{name},#{password},#{type},#{mail},#{registerTime},#{token},#{status})
+		
+		<selectKey  resultType="int" order="AFTER">
+			select @@identity
+		</selectKey>
+	</insert>
+	
+	<select id="checkMailStatus" resultType="RegisterUser">
+		select name,password,type,status,registerTime from
+		<choose>	
+				<when test="type == 'teacher'">
+					teacherUser
+				</when>
+				<when test="type == 'student'">
+					studentUser
+				</when>
+			</choose> 
+			where name=#{name} and token=#{token}
+	</select>
+	
+	<update id="updateUser" parameterType="int">
+		update 
+		<choose>	
+				<when test="type == 'teacher'">
+					teacherUser
+				</when>
+				<when test="type == 'student'">
+					studentUser
+				</when>
+			</choose> 
+			set status=#{status} where name=#{name} and password=#{password}
+	</update>
+	<delete id="deleteUser" parameterType="int">
+		delete from 
+		<choose>	
+				<when test="type == 'teacher'">
+					teacherUser
+				</when>
+				<when test="type == 'student'">
+					studentUser
+				</when>
+			</choose> 
+			 where name=#{name} and password=#{password}
+	</delete>
+</mapper>

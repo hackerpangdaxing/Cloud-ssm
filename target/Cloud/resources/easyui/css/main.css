@@ -1,0 +1,49 @@
+/* 
+* @Author: Marte
+* @Date:   2017-03-26 15:53:59
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-03-27 15:47:30
+*/
+a{
+    text-decoration:none;
+}
+
+.north{
+    font-size:20px;
+    color:white;
+    height: 50px;
+    background:#1E1E1E;
+}
+.north-logo{
+        margin: 12px 50px;
+        float:left;
+}
+.north-list{
+    margin-top: -6px;
+    margin-left:1150px;
+}
+/* .north-ul{
+     margin:12px 600px;
+} */
+.north-ul li{
+    margin-left:20px;
+    list-style:none;
+      float:left;
+}
+.west{
+    width:160px;
+ 
+}
+#west-tree{
+    margin-left:-20px;
+    color:#4B707D;
+    font-family: STKaiti ;
+}
+
+.easyui-tabs{
+    height:100px;
+}
+.center{
+    margin-left:5px;
+    margin-top:5px;
+}

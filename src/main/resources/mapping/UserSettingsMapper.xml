@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.dao.IUserSettingsDao">
+	<update id="updateStudentUserInfo">
+	    update studentUser set  
+		studentRealName = #{studentRealName,jdbcType=VARCHAR} , 
+		school = #{school,jdbcType=VARCHAR} , 
+		college = #{college,jdbcType=VARCHAR} , 
+		major =  #{major,jdbcType=VARCHAR}, 
+		studentNumber =  #{studentNumber,jdbcType=VARCHAR}
+		WHERE studentId =  #{studentId,jdbcType=INTEGER} 
+	</update>
+	
+	<update id="updateStudentUserPassword">
+	    update studentUser set  
+		password = #{password,jdbcType=VARCHAR} 
+		WHERE studentId =  #{studentId,jdbcType=INTEGER} 
+	</update>
+	
+	
+	<update id="updateTeacherUserInfo">
+		update teacherUser set  
+		teacherRealName = #{teacherRealName,jdbcType=VARCHAR} , 
+		school = #{school,jdbcType=VARCHAR} , 
+		college = #{college,jdbcType=VARCHAR} , 
+		teacherNumber =  #{teacherNumber,jdbcType=VARCHAR}, 
+		mainMajor =  #{mainMajor,jdbcType=VARCHAR} ,
+		electiveMajor =  #{electiveMajor,jdbcType=VARCHAR}
+		WHERE teacherId =  #{teacherId,jdbcType=INTEGER} 
+	</update>
+	
+	
+	<update id="updateTeacherUserPassword">
+		update teacherUser set  
+		password = #{password,jdbcType=VARCHAR} 
+		WHERE teacherId =  #{teacherId,jdbcType=INTEGER} 
+	</update>
+</mapper>
