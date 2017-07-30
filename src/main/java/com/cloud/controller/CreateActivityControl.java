@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.socket.TextMessage;
 
@@ -67,7 +68,7 @@ public class CreateActivityControl {
 	 */
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/createAcitvity")
+	@RequestMapping(value = "/createAcitvity",method = RequestMethod.POST)
 	public @ResponseBody ActivityRoom CreateActivityRoom(@RequestBody CreateClassActivity classActivity) throws Exception {
 		String format = new SimpleDateFormat("HHmmss").format(new Date());
 		Map<Integer, ActivityRoom> ActivityRooms = (Map<Integer, ActivityRoom>) servletContext.getAttribute("ActivityRooms");
@@ -77,6 +78,7 @@ public class CreateActivityControl {
 		ArrayList<User> user = (ArrayList<User>) servletContext.getAttribute("User");
 		// 完整的试卷详情
 		Integer teacherId = classActivity.getTeacherId();
+		//随机生成活动ID
 		Random random = new Random();
 		classActivity.setActivityId(teacherId+Integer.valueOf(format)+random.nextInt(6556126));
 		Integer activityId = classActivity.getActivityId();
@@ -84,7 +86,6 @@ public class CreateActivityControl {
 		// userService.findUser(name, password)
 		if (classActivityId != null && classActivityId.contains(activityId)) {
 			//printWriter.write("Already exist");
-
 			return new ActivityRoom();
 		} else if (0 != this.activityService.selectClassActivity(activityId) && classActivityId.contains(activityId)) {
 			logger.info("已经存在在数据库 并且也存在在servletContext中");

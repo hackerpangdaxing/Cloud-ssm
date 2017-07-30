@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MyTest {
 	private static Logger logger = Logger.getLogger(MyTest.class);
 	
-	 * @Resource private IOnlineTestService service;
+	 @Resource private IOnlineTestService service;
 	 
 	@Autowired
 	@Qualifier("IClassActivity")

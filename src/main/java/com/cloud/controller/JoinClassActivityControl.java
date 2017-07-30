@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,9 +125,9 @@ public class JoinClassActivityControl {
 	 * @return 是否将用户答案记录到数据库
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/submitAnswer", method = RequestMethod.POST, consumes = "application/json")
-	@ResponseBody
-	public Boolean getExaminationPaperAnswer(@RequestBody UserEvenLog userEvenLog) throws Exception {
+	@CrossOrigin
+	@RequestMapping(value = "/submitAnswer", method = RequestMethod.POST)
+	public @ResponseBody Boolean getExaminationPaperAnswer(@RequestBody UserEvenLog userEvenLog) throws Exception {
 		String uuid = UUID.randomUUID().toString();
 		userEvenLog.setEventId(uuid);
 		if (userEvenLog.getActivityId() == null) {
@@ -134,7 +135,6 @@ public class JoinClassActivityControl {
 		}
 		int insertAnswerResult = this.onlineTestService.insertAnswerResult(userEvenLog);
 		if (insertAnswerResult == 1) {
-
 			List<Integer> rightId = new ArrayList<>();
 			List<Integer> errorId = new ArrayList<>();
 			String answerResults = userEvenLog.getAnswerResults();
