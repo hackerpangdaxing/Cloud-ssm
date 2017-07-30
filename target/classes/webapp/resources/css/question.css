@@ -1,0 +1,20 @@
+#error{
+	color:red;
+	width:100px;
+	height:100px;
+	border:red solid;
+}
+#question{
+	width:300px;
+	background-color:red;
+	margin-left:30%;
+	margin-top:10px;
+}
+#footer{
+	margin-left:30%;
+}
+#footer a{
+	color:black;
+	text-decoration:none;
+	margin-left:15px;
+}

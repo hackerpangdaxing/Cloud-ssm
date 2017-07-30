@@ -1,0 +1,35 @@
+a{
+    text-decoration:none;
+    color:red;
+}
+
+.content{
+	margin-left:25%;
+}
+.header{
+	background-color:#87B7D9;
+	width:500px;
+	height:20px;
+	border-color: #87B7D9;
+	border-style:groove ;
+	margin-top:100px;
+	font-size: 0.5em;
+	color: #4F8AB7;
+}
+.activity{
+	margin-left:50px;
+	margin-top:20px;
+}
+table{
+border-collapse:collapse;
+text-align: center;
+}
+table, td, th {
+  border:1px solid #CFE6FC;
+  }
+.activity_li_1{
+	background-color:#F2F9FB; 
+}
+td{
+	padding:10px 20px;
+}
